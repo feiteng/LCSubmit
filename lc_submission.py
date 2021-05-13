@@ -6,21 +6,20 @@ from http.cookies import SimpleCookie
 import getCookie
 import os
 
-csrftoken = ''
-leetcode_session = ''
-try:
-    csrftoken = getCookie.getCSRFToken(1)
-    leetcode_session = getCookie.getLeetcodeSession(1)
-    print('successfully loaded cookies..')
-except:
-    print('error in reading cookie config file..')
-    csrftoken = getCookie.getCSRFToken(2)
-    leetcode_session = getCookie.getLeetcodeSession(2)
+def getAllCookie():
+    csrftoken = ''
+    leetcode_session = ''
+    try:
+        csrftoken = getCookie.getCSRFToken()
+        leetcode_session = getCookie.getLeetcodeSession()
+        print('successfully loaded cookies..')
+    except:
+        print('[lc_submission] error loading cookies file..')
+        return
 
-cookie_str = 'csrftoken=' + csrftoken + ';LEETCODE_SESSION=' + leetcode_session
+    cookie_str = 'csrftoken=' + csrftoken + ';LEETCODE_SESSION=' + leetcode_session
+    return [csrftoken, leetcode_session, cookie_str]
 
-# print('csrftoken=' + csrftoken)
-# print('leetcode_session=' + leetcode_session)
 
 def toStr(item):
     if isinstance(item, list): return '[' + ','.join([str(i) for i in item]) + ']'
@@ -48,7 +47,7 @@ def genCode(var, inputlist, resultlist, default_answer):
     codebody += '\n        return ' + default_answer
     return codebody
 
-def getQuestionSlug(url:str):
+def getQuestionSlug(url):
     split = url.split("/")
     return split[4]
 
@@ -69,6 +68,16 @@ def submit(questionNum, methodSignature, vars, defaultInput):
     frontend_question_id = questionNum
     questionNum = str(questionNum)
     questionURL += metadata[questionNum]['question_slug'] + '/submit/'
+
+    csrftoken = ''
+    cookie_str = ''
+
+    try:
+        cookies = getAllCookie()
+        csrftoken = cookies[0]
+        cookie_str = cookies[2]
+    except:
+        print('Error loading cookie file.. exit now')
 
     headers = {
         'referer': 'https://leetcode.com/accounts/login/',

@@ -7,7 +7,7 @@ import getCookie
 import os
 import lc_submission
 
-def parseInput(s : str):
+def parseInput(s):
     re = []
     initialPos = s.index('(')
     lastPos = s.index(')')
@@ -19,7 +19,7 @@ def parseInput(s : str):
         re.append(items[i].split(":")[0].strip())
 
     return re
-def parseDefaultInput(s : str):
+def parseDefaultInput(s):
     initialPos = s.index('->')
     vartype = s[initialPos + 3 : len(s) - 1]
     map = {'int':'0','List[int]':'[]'}
