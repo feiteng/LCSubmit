@@ -1,9 +1,10 @@
-import sys, configparser, submissionMask, os, setCookie
+import sys, configparser, submissionMask, os# setCookie
 
 
 try:
     if not os.path.exists('cookies.ini'):
-        setCookie.setCookie()
+        print('Cookie file does not exist, configure it please..')
+        # setCookie.setCookie()
 except:
     pass
 
