@@ -1,6 +1,6 @@
 import os, configparser
 
-import setCookie
+# import setCookie
 
 def getFromFile(str):
     config = configparser.ConfigParser()
@@ -12,7 +12,8 @@ def getCSRFToken():
     try:
         return getFromFile('CSRFTOKEN')
     except:
-        setCookie.setCookie()
+        print('adjust your cookie file properly..')
+        # setCookie.setCookie()
         #
         # if not os.path.exists('cookies.ini'):
         #     print('Creating cookies config file..')
@@ -26,7 +27,8 @@ def getLeetcodeSession():
     try:
         return getFromFile('LEETCODE_SESSION')
     except:
-        setCookie.setCookie()
+        print('adjust your cookie file properly..')
+        # setCookie.setCookie()
         # if not os.path.exists('cookies.ini'):
         #     print('Creating cookies config file..')
         #     config = configparser.ConfigParser()
