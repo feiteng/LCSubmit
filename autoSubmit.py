@@ -1,11 +1,19 @@
-import sys, configparser, submissionMask
+import sys, configparser, submissionMask, os, setCookie
 
 
-
+try:
+    if not os.path.exists('cookies.ini'):
+        setCookie.setCookie()
+except:
+    pass
 
 input = sys.argv
 # print(input)
-submissionFile = input[1]
+try:
+    submissionFile = input[1]
+except:
+    print('error loading question config file.. default to s1.ini')
+    submissionFile = 's1.ini'
 config = configparser.ConfigParser()
 # print(config)
 config.read(submissionFile)
