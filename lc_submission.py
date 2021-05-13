@@ -100,7 +100,7 @@ def submit(questionNum, methodSignature, vars, defaultInput):
         while True:
 
             count += 1
-            code_head = """import hashlib\ndef toStr(item): \n    if isinstance(item, list): return '[' + ','.join([str(i) for i in item]) + ']'\n    return str(item)\ndef myhash(item): return hashlib.sha256(bytes(toStr(item),"utf-8")).hexdigest()\nclass Solution:\n    """
+            code_head = """import hashlib\ndef toStr(item): \n    if isinstance(item, list): return '[' + ','.join([toStr(i) for i in item]) + ']'\n    return str(item)\ndef myhash(item): return hashlib.sha256(bytes(toStr(item),"utf-8")).hexdigest()\nclass Solution:\n    """
             code_head += methodSignature
             code_body = ''
             code_tail = ''

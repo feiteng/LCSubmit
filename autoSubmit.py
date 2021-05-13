@@ -7,7 +7,8 @@ try:
     print(input)
     submissionFile = input[2]
 except:
-    pass
+    print('error in loading input file...')
+    
 
 
 
