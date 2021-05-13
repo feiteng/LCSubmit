@@ -23,14 +23,48 @@ cookiepath=os.environ['LOCALAPPDATA']+r"\Google\Chrome\User Data\Default\Cookies
 def getFromFile(str):
     config = configparser.ConfigParser()
     config.read('cookies.ini')
-    return config['params'][str]
+    return config['cookies'][str]
 
 def getCSRFToken(selection):
-    if selection == 1: return getFromFile('csrftoken')
-    return getCookie('leetcode.com', 'csrftoken')
+    if selection == 1:
+        try:
+            return getFromFile('csrftoken')
+        except:
+            if not os.path.exists('cookies.ini'):
+                print('Creating cookies config file..')
+                config = configparser.ConfigParser()
+                config['cookies'] = {}
+                with open('cookies.ini', 'w') as file:
+                    config.write(file)
+            pass
+    csrftoken = getCookie('leetcode.com', 'csrftoken')
+    config = configparser.ConfigParser()
+    config.read('cookies.ini')
+    config['cookies']['CSRFTOKEN'] = csrftoken
+    with open('cookies.ini', 'w') as file:
+        config.write(file)
+    return csrftoken
+
 def getLeetcodeSession(selection):
-    if selection == 1: return getFromFile('leetcode_session')
-    return getCookie('.leetcode.com', 'LEETCODE_SESSION')
+    if selection == 1:
+        try:
+            return getFromFile('leetcode_session')
+        except:
+            if not os.path.exists('cookies.ini'):
+                print('Creating cookies config file..')
+                config = configparser.ConfigParser()
+                config['cookies'] = {}
+                with open('cookies.ini', 'w') as file:
+                    config.write(file)
+            pass
+
+    leetcode_session = getCookie('.leetcode.com', 'LEETCODE_SESSION')
+    config = configparser.ConfigParser()
+    config.read('cookies.ini')
+    config['cookies']['LEETCODE_SESSION'] = leetcode_session
+    with open('cookies.ini', 'w') as file:
+        config.write(file)
+    return leetcode_session
 
 def getCookie(host, targetName):
     sql="select host_key,name,encrypted_value from cookies where host_key='%s'" % host

@@ -11,7 +11,7 @@ leetcode_session = ''
 try:
     csrftoken = getCookie.getCSRFToken(1)
     leetcode_session = getCookie.getLeetcodeSession(1)
-    print('successfully loaded cookie from config file..')
+    print('successfully loaded cookies..')
 except:
     print('error in reading cookie config file..')
     csrftoken = getCookie.getCSRFToken(2)
@@ -93,7 +93,7 @@ def submit(questionNum, methodSignature, vars, defaultInput):
         encrypted_inputlist.append(tmpList)
         resultlist.append(map[key])
 
-    print(map)
+    # print(map)
 
     count = 0
     try:
