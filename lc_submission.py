@@ -127,13 +127,33 @@ def submit(questionNum, methodSignature, vars, defaultInput):
             while True:
                 resp = requests.post(url = questionURL, data = json.dumps(param), headers = headers)
                 time.sleep(1)
+                # print(resp.text)
+                # print(resp.status_code)
+                if resp.status_code == 499:
+                    print('leetcode closed drequest')
+                    return
                 if resp.status_code == 405:
                     print('error in input..')
-                    break
+                    return
+                if resp.status_code == 403:
+                    print('user is not logged in.. please update cookies file')
+                    try: os.remove('cookies.ini')
+                    except: pass
+                    return
                 if resp.status_code == 200: break
+                else:
+                    if resp.status_code == 429:
+                        print('too many requests.. wait for 1 second')
 
             resultj = json.loads(resp.text)
-            print(resultj)
+            # if(resultj)
+            try:
+                submission_result = resultj['submission_id']
+            except:
+                print('error loading submission id.. error msg from leetcode..')
+                print(resultj)
+                return
+            # print(resultj)
             submission_id = resultj['submission_id']
 
             checkURL_head = 'https://leetcode.com/submissions/detail/'
@@ -148,12 +168,16 @@ def submit(questionNum, methodSignature, vars, defaultInput):
             }
 
             resp = ''
+            print('Fetching result.', end='', flush=True)
             while True:
                 resp = requests.get(url = checkURL, cookies = checkCookie)
                 submission_result = json.loads(resp.text)
-                time.sleep(0.5)
-                # print(resp.text)
+                time.sleep(1)
+                print(resp.text)
                 if submission_result['state'] != 'PENDING' and submission_result['state'] != 'STARTED': break
+                else:
+                    print('.', end='', flush=True)
+
 
             submission_resp = json.loads(resp.text)
 
@@ -161,8 +185,8 @@ def submit(questionNum, methodSignature, vars, defaultInput):
 
             if submission_resp['status_msg'] == 'Accepted': break
 
-            print('incorrect test case..\n' + submission_resp['last_testcase'])
-            print('expected output..' + submission_resp['expected_output'])
+            # print('incorrect test case..\n' + submission_resp['last_testcase'])
+            # print('expected output..' + submission_resp['expected_output'])
 
             inputs = submission_resp['last_testcase']
             inputssplit = inputs.split("\n")
@@ -175,11 +199,12 @@ def submit(questionNum, methodSignature, vars, defaultInput):
             encrypted_inputlist.append(newInputList)
             resultlist.append(outputs)
             map[inputs] = outputs
+            with open(testCases, 'w') as file:
+                json.dump(map, file)
 
     except Exception as err:
         print(err)
         pass
 
-    with open(testCases, 'w') as file:
-        json.dump(map, file)
+
 

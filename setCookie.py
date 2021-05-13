@@ -8,13 +8,10 @@ from bs4 import BeautifulSoup
 import sqlite3
 import gzip, os
 
-from Cryptodome.Cipher import AES
-
-
-
 def getCookie(host, targetName):
 
     import win32crypt
+    from Cryptodome.Cipher import AES
     encrypted_key = None
     try:
         with open(os.getenv("APPDATA") + "/../Local/Google/Chrome/User Data/Local State", 'r') as file:
@@ -38,20 +35,31 @@ def getCookie(host, targetName):
             decrypted_value = cipher.decrypt_and_verify(encrypted_value[3+12:-16], encrypted_value[-16:])
         except:
             # If failed try with the old method
-            decrypted_value = win32crypt.CryptUnprotectData(encrypted_value, None, None, None, 0)[1].decode('utf-8') or value or 0
+            decrypted_value = win32crypt.CryptUnprotectData(encrypted_value, None, None, None, 0)[1].decode('utf-8') or 0
         if targetName == name.decode('utf-8'):
             return decrypted_value.decode('utf-8')
+    return '#'
 
 def setCookie():
     if os.path.exists('cookies.ini'):
-        os.rmdir('cookies.ini')
+        os.remove('cookies.ini')
 
     csrftoken = getCookie('leetcode.com', 'csrftoken')
     leetcode_session = getCookie('.leetcode.com', 'LEETCODE_SESSION')
 
+    if csrftoken == '#':
+        print('Error finding CSRF token, please refresh leetcode website..')
+        return
+    if leetcode_session == '#':
+        print('Error finding LEETCODE_SESSION, please log-in..')
+        return
     config = configparser.ConfigParser()
     config['cookies'] = {}
     config['cookies']['CSRFTOKEN'] = csrftoken
     config['cookies']['LEETCODE_SESSION'] = leetcode_session
     with open('cookies.ini', 'w') as file:
         config.write(file)
+    print('Updated cookies')
+
+
+# setCookie()
