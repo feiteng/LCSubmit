@@ -1,14 +1,4 @@
 import os, configparser
-import json
-import base64
-import sqlite3
-from shutil import copyfile
-import requests, json
-from bs4 import BeautifulSoup
-import sqlite3
-import gzip, os
-import win32crypt
-from Cryptodome.Cipher import AES
 
 import setCookie
 
