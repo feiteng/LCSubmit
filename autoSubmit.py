@@ -22,7 +22,8 @@ def submit():
         default_input = config['params']['default_input']
 
         submissionMask.submit(question_id, function_signature, default_input)
-    except:
+    except Exception as err:
+        print(err)
         return
 
 submit()

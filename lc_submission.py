@@ -13,7 +13,8 @@ def getAllCookie():
         csrftoken = getCookie.getCSRFToken()
         leetcode_session = getCookie.getLeetcodeSession()
         print('successfully loaded cookies..')
-    except:
+    except Exception as err:
+        print(err)
         print('[lc_submission] error loading cookies file..')
         return
 
@@ -123,7 +124,7 @@ def submit(questionNum, methodSignature, vars, defaultInput):
                 'typed_code': code
             }
 
-
+            print('Submitting now', end='', flush=True)
             while True:
                 resp = requests.post(url = questionURL, data = json.dumps(param), headers = headers)
                 time.sleep(1)
@@ -143,10 +144,10 @@ def submit(questionNum, methodSignature, vars, defaultInput):
                 if resp.status_code == 200: break
                 else:
                     if resp.status_code == 429:
-                        print('too many requests.. wait for 1 second')
+                        print('.', end = '', flush=True)
 
             resultj = json.loads(resp.text)
-            # if(resultj)
+
             try:
                 submission_result = resultj['submission_id']
             except:
@@ -168,7 +169,7 @@ def submit(questionNum, methodSignature, vars, defaultInput):
             }
 
             resp = ''
-            print('Fetching result.', end='', flush=True)
+            print('Fetching result', end='', flush=True)
             while True:
                 resp = requests.get(url = checkURL, cookies = checkCookie)
                 submission_result = json.loads(resp.text)
@@ -198,6 +199,9 @@ def submit(questionNum, methodSignature, vars, defaultInput):
             outputs = submission_resp['expected_output']
             encrypted_inputlist.append(newInputList)
             resultlist.append(outputs)
+            if inputs in map:
+                print('Found same results .. submission stopped')
+                return
             map[inputs] = outputs
             with open(testCases, 'w') as file:
                 json.dump(map, file)
