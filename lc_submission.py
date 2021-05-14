@@ -174,7 +174,7 @@ def submit(questionNum, methodSignature, vars, defaultInput):
                 resp = requests.get(url = checkURL, cookies = checkCookie)
                 submission_result = json.loads(resp.text)
                 time.sleep(1)
-                print(resp.text)
+                # print(resp.text)
                 if submission_result['state'] != 'PENDING' and submission_result['state'] != 'STARTED': break
                 else:
                     print('.', end='', flush=True)
