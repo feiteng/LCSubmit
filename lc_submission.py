@@ -39,8 +39,6 @@ def genCode(var, inputlist, resultlist, default_answer):
         # if varsize > 1:
         for j in range(varsize):
             code_iter.append('myhash(' + var[j] + ') == "' + inputlist[i][j] + '"')
-        # else:
-        #     code_iter.append('myhash(' + str(var[0]) + ') == "' + inputlist[i] + '"')
 
         code_init += " and ".join(code_iter)
         code_init += ': return ' + resultlist[i]
@@ -100,6 +98,9 @@ def submit(questionNum, methodSignature, vars, defaultInput):
         tmpList = []
         for item in key.split('\n'):
             item = item.replace('"', '')
+            item = item.replace(' ', '')
+            print(item.rstrip())
+            print(myhash(item.rstrip()))
             tmpList.append(myhash(item.rstrip()))
         encrypted_inputlist.append(tmpList)
         resultlist.append(map[key])
@@ -195,6 +196,7 @@ def submit(questionNum, methodSignature, vars, defaultInput):
             newInputList = []
             for eachinput in inputssplit:
                 eachinput = eachinput.replace('"', '')
+                eachinput = eachinput.replace(' ', '')
                 newInputList.append(myhash(eachinput))
             inputlist.append(inputs)
             outputs = submission_resp['expected_output']
