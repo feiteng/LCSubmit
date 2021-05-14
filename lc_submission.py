@@ -99,6 +99,7 @@ def submit(questionNum, methodSignature, vars, defaultInput):
     for key in map:
         tmpList = []
         for item in key.split('\n'):
+            item = item.replace('"', '')
             tmpList.append(myhash(item.rstrip()))
         encrypted_inputlist.append(tmpList)
         resultlist.append(map[key])
@@ -124,7 +125,7 @@ def submit(questionNum, methodSignature, vars, defaultInput):
                 'typed_code': code
             }
 
-            print('Submitting now', end='', flush=True)
+            print('Submitting now.', end='', flush=True)
             while True:
                 resp = requests.post(url = questionURL, data = json.dumps(param), headers = headers)
                 time.sleep(1)
@@ -161,7 +162,7 @@ def submit(questionNum, methodSignature, vars, defaultInput):
             checkURL_append = '/check/'
             checkURL = checkURL_head + str(submission_id) + checkURL_append
 
-            print(checkURL_head + str(submission_id))
+            print('\n' + checkURL_head + str(submission_id))
 
             checkCookie = {
                 'cookie': cookie_str,
@@ -202,6 +203,8 @@ def submit(questionNum, methodSignature, vars, defaultInput):
             if inputs in map:
                 print('Found same results .. submission stopped')
                 return
+            print(inputs)
+            print(outputs)
             map[inputs] = outputs
             with open(testCases, 'w') as file:
                 json.dump(map, file)
